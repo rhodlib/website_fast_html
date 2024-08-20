@@ -19,9 +19,30 @@ from fasthtml.common import (
     Input,
     Textarea,
     Card,
+    Button,
+    Title,
+    Meta,
+    Favicon,
+    Img,
 )
 
-app, rt = fast_app(live=True)
+description = (
+    "Rodolfo Talibs Website, Web developer with experience in JavaScript & Python."
+)
+
+hdrs = [
+    Meta(charset="UTF-8"),
+    Meta(
+        name="viewport",
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0",
+    ),
+    Meta(name="description", content=description),
+    *Favicon("/favicon.ico", "/favicon.ico"),
+]
+
+app, rt = fast_app(live=True, hdrs=hdrs)
+
+_blank = dict(target="_blank", rel="noopener noreferrer")
 
 paragraph_1 = """
 Hello! I'm rhodlib, a technology enthusiast with over 3 years of experience in web and mobile development. My journey in the programming world began with a passion for JavaScript and Python, and over the years, I've had the privilege of working on innovative projects that have honed my ability to create efficient and elegant solutions.
@@ -40,15 +61,20 @@ My approach to technology is driven by curiosity and a constant desire to learn 
 
 
 def HomeView():
-    return Div(
-        H2("Welcome to my website"),
-        Article(P(paragraph_1), P(paragraph_2), P(paragraph_3), P(paragraph_4)),
+    return (
+        H2("Welcome to my website", style=dict({"text-align": "center"})),
+        Article(
+            P(paragraph_1),
+            P(paragraph_2),
+            P(paragraph_3),
+            P(paragraph_4),
+        ),
     )
 
 
 def ProjectView():
     return Div(
-        H2("Projects"),
+        H2("Projects", style=dict({"text-align": "center"})),
         Div(
             Card(
                 H3("MMO Project"),
@@ -61,7 +87,11 @@ def ProjectView():
                 P(
                     "The Weirdos is a blog where we talk about technology, anime, series, movies, video games, and life topics. A podcast will be added soon."
                 ),
-                A("Link to the Weirdos", href="https://theweirdos.substack.com/"),
+                A(
+                    "The Weirdos Blog",
+                    hx_replace_url="https://theweirdos.substack.com/",
+                    **_blank,
+                ),
             ),
         ),
     )
@@ -69,7 +99,7 @@ def ProjectView():
 
 def ContactMeView():
     return Div(
-        H2("Contact Me"),
+        H2("Contact Me", style=dict({"text-align": "center"})),
         Form(
             Fieldset(
                 Label("Fullname", Input()),
@@ -84,31 +114,44 @@ def ContactMeView():
 
 def NavComponent():
     return Nav(
-        H1("Rodo Talibs"),
+        H1("Rodo Talibs", style=dict({"margin": "0px"})),
         Ul(
             Li(A("Home", hx_get=("/"), hx_target="main")),
             Li(A("Projects", hx_get="/projects", hx_target="main")),
-            Li(A("Contact Me", hx_get="/contact", hx_target="main")),
+            Li(Button("Contact Me", hx_get="/contact", hx_target="main")),
+        ),
+        style=dict(
+            {
+                "display": "flex",
+                "align-items": "center",
+            }
         ),
     )
 
 
 @rt("/")
 def get():
-    return Container(NavComponent(), Main(HomeView(), id="main"))
+    return (
+        Title("Rodo Talibs - Web developer"),
+        Container(
+            NavComponent(),
+            Main(HomeView(), id="main", style=dict({"padding-top": "30px"})),
+        ),
+    )
 
 
 @rt("/projects")
 def get():
     return Container(
-        NavComponent(),
-        ProjectView(),
+        NavComponent(), Main(ProjectView(), style=dict({"padding-top": "30px"}))
     )
 
 
 @rt("/contact")
 def get():
-    return Container(NavComponent(), ContactMeView())
+    return Container(
+        NavComponent(), Main(ContactMeView(), style=dict({"padding-top": "30px"}))
+    )
 
 
 serve()
