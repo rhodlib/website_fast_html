@@ -89,7 +89,7 @@ def ProjectView():
                 ),
                 A(
                     "The Weirdos Blog",
-                    hx_replace_url="https://theweirdos.substack.com/",
+                    href="https://theweirdos.substack.com/",
                     **_blank,
                 ),
             ),
