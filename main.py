@@ -23,7 +23,8 @@ from fasthtml.common import (
     Title,
     Meta,
     Favicon,
-    Img,
+    Progress,
+    Link,
 )
 
 description = (
@@ -38,9 +39,15 @@ hdrs = [
     ),
     Meta(name="description", content=description),
     *Favicon("/favicon.ico", "/favicon.ico"),
+    Link(
+        rel="stylesheet",
+        href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.fuchsia.min.css",
+    ),
 ]
 
-app, rt = fast_app(live=True, hdrs=hdrs)
+font_color = "#F869BF"
+
+app, rt = fast_app(live=True, hdrs=hdrs, pico=False)
 
 _blank = dict(target="_blank", rel="noopener noreferrer")
 
@@ -61,32 +68,33 @@ My approach to technology is driven by curiosity and a constant desire to learn 
 
 
 def HomeView():
-    return (
-        H2("Welcome to my website", style=dict({"text-align": "center"})),
-        Article(
-            P(paragraph_1),
-            P(paragraph_2),
-            P(paragraph_3),
-            P(paragraph_4),
-        ),
+    return Article(
+        H3("Who I am", style={"color": font_color}),
+        P(paragraph_1),
+        H3("What I do", style={"color": font_color}),
+        P(paragraph_2),
+        P(paragraph_3),
+        H3("Why I do", style={"color": font_color}),
+        P(paragraph_4),
     )
 
 
 def ProjectView():
     return Div(
-        H2("Projects", style=dict({"text-align": "center"})),
         Div(
             Card(
-                H3("MMO Project"),
+                H3("MMO Project", style={"color": font_color}),
                 P(
                     "This project is under construction; it is an MMO that will be played through the browser. More updates coming soon."
                 ),
+                Progress(value=10, max=100, style=dict({"margin-top": "5px"})),
             ),
             Card(
-                H3("The Weirdos"),
+                H3("The Weirdos", style={"color": font_color}),
                 P(
-                    "The Weirdos is a blog where we talk about technology, anime, series, movies, video games, and life topics. A podcast will be added soon."
+                    "The Weirdos is a blog where we talk about technology, anime, series, movies, video games, and life topics."
                 ),
+                P("A podcast will be added soon."),
                 A(
                     "The Weirdos Blog",
                     href="https://theweirdos.substack.com/",
@@ -99,7 +107,6 @@ def ProjectView():
 
 def ContactMeView():
     return Div(
-        H2("Contact Me", style=dict({"text-align": "center"})),
         Form(
             Fieldset(
                 Label("Fullname", Input()),
@@ -108,13 +115,20 @@ def ContactMeView():
                 Label("Mensaje", Textarea()),
             ),
             Input(type="submit"),
+            style=dict({"width": "450px"}),
         ),
+        style=dict({"display": "flex", "justify-content": "center"}),
     )
 
 
 def NavComponent():
     return Nav(
-        H1("Rodo Talibs", style=dict({"margin": "0px"})),
+        H1(
+            "Rodo Talibs",
+            style=dict({"margin": "0px", "color": "#D9269D"}),
+            hx_get=("/"),
+            hx_target="main",
+        ),
         Ul(
             Li(A("Home", hx_get=("/"), hx_target="main")),
             Li(A("Projects", hx_get="/projects", hx_target="main")),
@@ -135,7 +149,11 @@ def get():
         Title("Rodo Talibs - Web developer"),
         Container(
             NavComponent(),
-            Main(HomeView(), id="main", style=dict({"padding-top": "30px"})),
+            Main(
+                HomeView(),
+                id="main",
+                style=dict({"padding-top": "30px"}),
+            ),
         ),
     )
 
@@ -143,14 +161,16 @@ def get():
 @rt("/projects")
 def get():
     return Container(
-        NavComponent(), Main(ProjectView(), style=dict({"padding-top": "30px"}))
+        NavComponent(),
+        Main(ProjectView(), style=dict({"padding-top": "30px"})),
     )
 
 
 @rt("/contact")
 def get():
     return Container(
-        NavComponent(), Main(ContactMeView(), style=dict({"padding-top": "30px"}))
+        NavComponent(),
+        Main(ContactMeView(), style=dict({"padding-top": "30px"})),
     )
 
 
