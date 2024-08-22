@@ -52,7 +52,7 @@ app, rt = fast_app(live=True, hdrs=hdrs, pico=False)
 _blank = dict(target="_blank", rel="noopener noreferrer")
 
 paragraph_1 = """
-Hello! I'm rhodlib, a technology enthusiast with over 3 years of experience in web and mobile development. My journey in the programming world began with a passion for JavaScript and Python, and over the years, I've had the privilege of working on innovative projects that have honed my ability to create efficient and elegant solutions.
+Hello! I'm Rodolfo Talibs, a technology enthusiast with over 3 years of experience in web and mobile development. My journey in the programming world began with a passion for JavaScript and Python, and over the years, I've had the privilege of working on innovative projects that have honed my ability to create efficient and elegant solutions.
 """
 paragraph_2 = """
 I currently work at a company, where we're developing B2B software that's transforming the way businesses manage their operations. In this exciting environment, I work with a robust tech stack that includes React for frontend development and Django along with Django REST framework for backend development. These frameworks enable me to build fast, secure, and highly scalable web applications.
@@ -124,15 +124,15 @@ def ContactMeView():
 def NavComponent():
     return Nav(
         H1(
-            "Rodo Talibs",
+            "Rhodlib",
             style=dict({"margin": "0px", "color": "#D9269D"}),
             hx_get=("/"),
             hx_target="main",
         ),
         Ul(
-            Li(A("Home", hx_get=("/"), hx_target="main")),
-            Li(A("Projects", hx_get="/projects", hx_target="main")),
-            Li(Button("Contact Me", hx_get="/contact", hx_target="main")),
+            Li(A("Home", hx_get=("/"), hx_target="body")),
+            Li(A("Projects", hx_get="/projects", hx_target="body")),
+            Li(Button("Contact", hx_get="/contact", hx_target="body")),
         ),
         style=dict(
             {
@@ -151,7 +151,6 @@ def get():
             NavComponent(),
             Main(
                 HomeView(),
-                id="main",
                 style=dict({"padding-top": "30px"}),
             ),
         ),
